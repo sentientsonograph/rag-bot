@@ -1,0 +1,6 @@
+__pycache__/
+uploads/
+venv/
+node_modules/
+.env
+*.cfg
