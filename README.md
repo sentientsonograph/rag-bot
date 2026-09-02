@@ -27,97 +27,11 @@ A full-stack Retrieval-Augmented Generation (RAG) app. Upload PDFs, select them,
 │                        │                                    │
 │            ┌───────────▼──────────────┐                    │
 │            │   Google Gemini APIs     │                    │
-│            │  text-embedding-004      │                    │
-│            │  gemini-2.0-flash        │                    │
+│            │  gemini-embedding-001    │                    │
+│            │  gemini-2.5-flash        │                    │
 │            └──────────────────────────┘                    │
 └─────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Prerequisites
-
-| Tool | Min Version | Check |
-|------|-------------|-------|
-| Python | 3.10+ | `python --version` |
-| Node.js | 18+ | `node --version` |
-| npm | 9+ | `npm --version` |
-| Google API Key | — | [Get one →](https://aistudio.google.com/app/apikey) |
-
----
-
-## Setup — Step by Step
-
-### 1. Clone / extract the project
-
-```bash
-# If from git:
-git clone <your-repo-url>
-cd rag-bot
-
-# Or just cd into the extracted folder:
-cd rag-bot
-```
-
-### 2. Get a Google API Key
-
-1. Go to **https://aistudio.google.com/app/apikey**
-2. Click **Create API key**
-3. Copy the key — you'll need it in the next step
-
-### 3. Backend setup
-
-```bash
-cd backend
-
-# Create and activate a virtual environment
-python -m venv venv
-
-# On macOS / Linux:
-source venv/bin/activate
-
-# On Windows:
-venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Create your .env file
-cp .env.example .env
-```
-
-Open `.env` and set your key:
-```
-GOOGLE_API_KEY=AIza...your_key_here...
-```
-
-Start the backend server:
-```bash
-uvicorn main:app --reload --port 8000
-```
-
-You should see:
-```
-INFO:     Uvicorn running on http://127.0.0.1:8000
-```
-
-Test it: http://localhost:8000/health → should return `{"status":"ok"}`
-
-### 4. Frontend setup
-
-Open a **new terminal**:
-
-```bash
-cd frontend
-
-# Install Node dependencies
-npm install
-
-# Start the dev server
-npm start
-```
-
-The browser opens automatically at **http://localhost:3000**
 
 ---
 
@@ -181,7 +95,7 @@ pdfplumber → extract raw text
 Chunker → 800-char chunks, 150-char overlap
     │
     ▼
-Google text-embedding-004 → vector per chunk
+Google gemini-embedding-001 → vector per chunk
     │
     ▼
 Stored in NumPy array (in-memory)
@@ -198,23 +112,11 @@ Cosine similarity vs all doc chunk vectors
 Top-5 most relevant chunks retrieved
     │
     ▼
-Prompt: question + context chunks → Gemini 2.0 Flash
+Prompt: question + context chunks → Gemini 2.5 Flash
     │
     ▼
 Streamed response via Server-Sent Events
 ```
-
----
-
-## Troubleshooting
-
-| Problem | Fix |
-|---------|-----|
-| `GOOGLE_API_KEY` error | Make sure `.env` is filled and server was restarted |
-| CORS error in browser | Confirm backend is running on port 8000 |
-| "Could not extract text" | PDF may be image-only/scanned; try OCR tools first |
-| Port 3000 or 8000 in use | Change with `PORT=3001 npm start` or `--port 8001` |
-| `npm install` fails | Ensure Node 18+: `node --version` |
 
 ---
 
